@@ -1,8 +1,4 @@
 <?php
-/**
- * index.php — Entry point
- * Routes to dashboard if logged in, otherwise to login page.
- */
 
 define('BASE_URL', '/task%20manager/');
 

@@ -1,4 +1,4 @@
-# TaskFlow — Task Management App
+# Goal Manager — Task Management App
 
 A clean, minimal full-stack Task Manager built with **vanilla PHP**, **MySQL (PDO)**, and **Tailwind CSS via CDN**.
 

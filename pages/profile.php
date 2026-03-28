@@ -1,7 +1,5 @@
 <?php
-/**
- * pages/profile.php
- */
+
 
 define('BASE_URL', '/task%20manager/');
 $pageTitle = 'Profile';

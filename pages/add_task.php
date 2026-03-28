@@ -1,7 +1,4 @@
 <?php
-/**
- * pages/add_task.php
- */
 
 define('BASE_URL', '/task%20manager/');
 $pageTitle = 'Add Task';

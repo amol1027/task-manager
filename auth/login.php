@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if (empty($errors)) {
             $db   = getDB();
-            $stmt = $db->prepare('SELECT id, name, password FROM users WHERE email = ?');
+            $stmt = $db->prepare('SELECT id, name, password, role FROM users WHERE email = ?');
             $stmt->execute([$email]);
             $user = $stmt->fetch();
 
@@ -36,11 +36,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 session_regenerate_id(true);
                 $_SESSION['user_id']   = $user['id'];
                 $_SESSION['user_name'] = $user['name'];
+                $_SESSION['is_admin']  = ($user['role'] === 'admin');
+                $_SESSION['admin_name'] = $user['name'];
                 // Regenerate CSRF for this new session
                 $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 
                 $_SESSION['flash'][] = ['type' => 'success', 'msg' => 'Welcome back, ' . $user['name'] . '!'];
-                header('Location: ' . BASE_URL . 'pages/dashboard.php');
+
+                // Redirect admins to admin panel
+                if ($user['role'] === 'admin') {
+                    header('Location: ' . BASE_URL . 'admin/index.php');
+                } else {
+                    header('Location: ' . BASE_URL . 'pages/dashboard.php');
+                }
                 exit;
             } else {
                 $errors[] = 'Invalid email or password.';
@@ -58,7 +66,7 @@ $pageTitle = 'Login';
         <!-- Header -->
         <div class="mb-8 text-center">
             <span class="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-indigo-600 text-white text-xl font-bold mb-4">T</span>
-            <h1 class="text-2xl font-bold text-gray-900">Sign in to TaskFlow</h1>
+            <h1 class="text-2xl font-bold text-gray-900">Sign in to Goal Manager</h1>
             <p class="text-sm text-gray-500 mt-1">Manage your tasks efficiently.</p>
         </div>
 

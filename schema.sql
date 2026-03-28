@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS users (
     name        VARCHAR(100)  NOT NULL,
     email       VARCHAR(150)  NOT NULL UNIQUE,
     password    VARCHAR(255)  NOT NULL,
+    role        ENUM('user','admin') NOT NULL DEFAULT 'user',
     created_at  TIMESTAMP     DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 
@@ -27,8 +28,15 @@ CREATE TABLE IF NOT EXISTS tasks (
 ) ENGINE=InnoDB;
 
 -- Sample user (password: Password@123)
-INSERT INTO users (name, email, password) VALUES
-('Alice Johnson', 'alice@example.com', '$2y$12$YetX8Nt1rJHCw2DKCxp4/.JU9UXLnv8z5UMoHAGGLPdj1KLGp5pKe');
+INSERT INTO users (name, email, password, role) VALUES
+('Alice Johnson', 'alice@example.com', '$2y$12$YetX8Nt1rJHCw2DKCxp4/.JU9UXLnv8z5UMoHAGGLPdj1KLGp5pKe', 'user');
+
+-- Admin user (password: Admin@123)
+-- Hash for Admin@123: run php -r "echo password_hash('Admin@123', PASSWORD_BCRYPT, ['cost'=>12]);"
+INSERT INTO users (name, email, password, role) VALUES
+('Super Admin', 'admin@example.com', '$2y$12$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin');
+-- Note: the above hash is for 'password' (Laravel default) — replace with real hash.
+-- To get real hash: php -r "echo password_hash('Admin@123', PASSWORD_BCRYPT, ['cost'=>12]);"
 
 -- Sample tasks for Alice (user_id = 1)
 INSERT INTO tasks (user_id, title, description, status, priority, due_date) VALUES

@@ -1,13 +1,4 @@
 <?php
-/**
- * includes/header.php
- * - Starts session
- * - Auth guard: redirects to login if not logged in
- * - Renders Tailwind nav + flash messages
- *
- * Pages that do NOT need auth (login, register) must define
- * define('NO_AUTH', true) BEFORE including this file.
- */
 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
@@ -38,8 +29,8 @@ function navLink(string $href, string $label, string $current): string {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= isset($pageTitle) ? htmlspecialchars($pageTitle) . ' — TaskFlow' : 'TaskFlow' ?></title>
-    <meta name="description" content="TaskFlow — a clean, minimal task management app.">
+    <title><?= isset($pageTitle) ? htmlspecialchars($pageTitle) . ' — Goal Manager' : 'Goal Manager' ?></title>
+    <meta name="description" content="Goal Manager — a clean, minimal task management app.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -68,7 +59,7 @@ function navLink(string $href, string $label, string $current): string {
         <!-- Logo -->
         <a href="<?= BASE_URL ?>pages/dashboard.php" class="flex items-center gap-2">
             <span class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-indigo-600 text-white text-sm font-bold">T</span>
-            <span class="text-gray-900 font-bold text-lg tracking-tight">TaskFlow</span>
+            <span class="text-gray-900 font-bold text-lg tracking-tight">Goal Manager</span>
         </a>
 
         <!-- Links (desktop) -->
@@ -76,6 +67,11 @@ function navLink(string $href, string $label, string $current): string {
             <?= navLink(BASE_URL . 'pages/dashboard.php', 'Dashboard',  $currentPage) ?>
             <?= navLink(BASE_URL . 'pages/add_task.php',  'Add Task',   $currentPage) ?>
             <?= navLink(BASE_URL . 'pages/profile.php',   'Profile',    $currentPage) ?>
+            <?php if (!empty($_SESSION['is_admin'])): ?>
+            <a href="<?= BASE_URL ?>admin/index.php" class="text-sm font-semibold text-purple-600 hover:text-purple-800 transition-colors flex items-center gap-1">
+                🛡 Admin
+            </a>
+            <?php endif; ?>
         </div>
 
         <!-- Right side -->
@@ -95,6 +91,12 @@ function navLink(string $href, string $label, string $current): string {
 </nav>
 <!-- spacer -->
 <div class="h-16"></div>
+<?php if (!empty($_SESSION['admin_original_id'])): ?>
+<div class="w-full bg-amber-50 border-b border-amber-200 text-amber-800 text-xs font-medium px-4 py-2 flex items-center gap-2 justify-center">
+    <span>👁️ Viewing as <strong><?= htmlspecialchars($_SESSION['user_name']) ?></strong> (Admin impersonation)</span>
+    <a href="<?= BASE_URL ?>admin/revert.php" class="ml-3 underline hover:no-underline text-amber-700">↩️ Back to Admin</a>
+</div>
+<?php endif; ?>
 <?php endif; ?>
 
 <!-- ── Flash Messages ──────────────────────────────── -->
